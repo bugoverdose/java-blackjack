@@ -1,27 +1,13 @@
-# 블랙잭
+# 블랙잭 미션
 
-## 카드 정보
+- 플레이어 및 딜러가 지닌 카드 패의 변화를 유한상태머신을 통해 구현한 코드
+- 우아한테크코스 4기 / 레벨1 / 3번째 미션
 
-카드 덱은 다음과 같이 구성된다.
+## 카드 패 상태 (유한상태머신)
 
-```
-* 카드는 4가지 심볼로 구성된다. (SPADE, HEART, DIAMOND, CLOVER)
-* 카드는 13가지 랭크로 구성된다. (ACE, TWO, THREE, ..., TEN, JACK, QUEEN, KING)
-* 이에 따라 한 팩의 카드는 52장으로 이루어진다. 
-* 게임이 시작될 때 52장의 카드는 셔플되며, 맨 위의 카드부터 한 장씩 뽑힌다. 
-```
+[hand 패키지](https://github.com/bugoverdose/java-blackjack/tree/master/src/main/java/blackjack/domain/hand)
 
-카드 랭크별 숫자 정보는 아래와 같다.
-
-```
-* Ace : 1, 11 (21을 초과하지 않는 선에서 최대값 선택) 
-* TWO, THREE, ..., TEN : 2~10까지 대응되는 번호를 그대로 사용
-* JACK, QUEEN, KING : 10
-```
-
-## 카드 패 상태 변화
-
-카드 패가 지닐 수 있는 5가지 상태 (CardHand 인터페이스의 구현체)
+#### 카드 패가 지닐 수 있는 5가지 상태 (CardHand 인터페이스의 구현체)
 
 ```
 * OneCard : 카드 1장. 초기 상태.
@@ -31,23 +17,26 @@
 * Bust : 카드 2장 이상. 21점 초과.
 ```
 
-stay 선택 조건
+#### hit 메서드 호출에 따른 상태 변화
 
 ```
+* OneCard에서 한 장의 카드를 더 받으면 CanHit, Blackjack 중 한 가지로 변할 수 있다.
+* CanHit에서 한 장의 카드를 더 받으면 CanHit, Stay, Bust 중 한 가지로 변할 수 있다.
+* Stay, Blackjack, Bust 중 한 가지가 되면 더 이상 다른 상태로 변할 수 없다.
+```
+
+#### stay 메서드 호출 조건
+
+```
+* 플레이어는 CanHit 상태일 때 언제나 stay를 선택할 수 있다.
 * 플레이어는 21점이 되었을 때 무조건 stay를 선택해야 한다.
 * 딜러는 16점 이하일 때 무조건 hit을, 17~21점일 때는 무조건 stay를 선택해야 한다.
+* OneCard, Stay, Blackjack, Bust 상태일 때는 stay를 선택할 수 없다.
 ```
-
-변화의 방향성
-
-```
-* OneCard에서 CanHit, Blackjack 중 한 가지로 변할 수 있다.
-* CanHit에서 CanHit, Stay, Bust로 변할 수 있다.
-* Stay, Blackjack, Bust 중 한 가지가 되면 더 이상 다른 패로 변할 수 없다.
-```
-
 
 ## 기능 요구 사항
+
+[blackjack 애플리케이션](https://github.com/bugoverdose/java-blackjack/tree/master/src/main/java/blackjack)
 
 - [x] 게임에 참여할 플레이어의 이름을 입력 받는다.
   - 쉼표를 기준으로 분리한다.
@@ -101,3 +90,24 @@ stay 선택 조건
   - 플레이어와 딜러가 서로 무승부인 경우 금액을 잃지도, 얻지도 않는다.
   - 플레이어가 패배한 경우, 베팅금액만큼 잃는다.
   - 딜러는 플레이어의 손실만큼 획득하고, 플레이어가 획득한 만큼 잃는다.
+
+## 카드 정보
+
+[card 패키지](https://github.com/bugoverdose/java-blackjack/tree/master/src/main/java/blackjack/domain/card)
+
+#### 카드 덱 구성
+
+```
+* 카드는 4가지 심볼로 구성된다. (SPADE, HEART, DIAMOND, CLOVER)
+* 카드는 13가지 랭크로 구성된다. (ACE, TWO, THREE, ..., TEN, JACK, QUEEN, KING)
+* 이에 따라 한 팩의 카드는 52장으로 이루어진다. 
+* 게임이 시작될 때 52장의 카드는 셔플되며, 맨 위의 카드부터 한 장씩 뽑힌다. 
+```
+
+#### 카드 랭크별 점수 정보
+
+```
+* Ace : 1, 11 (패의 합이 21을 초과하지 않는 선에서 최대값 선택) 
+* TWO, THREE, ..., TEN : 2~10까지 대응되는 번호를 그대로 사용
+* JACK, QUEEN, KING : 10
+```
