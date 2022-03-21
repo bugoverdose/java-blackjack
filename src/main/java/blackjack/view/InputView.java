@@ -17,6 +17,7 @@ public class InputView {
     private static final String REQUEST_MORE_CARD_INPUT_FORMAT =
             "한장의 카드를 더 받겠습니까? (예는 " + YES + ", 아니오는 " + NO + ")";
     private static final String INVALID_MORE_PLAYER_CARD_INPUT_EXCEPTION_MESSAGE = YES + "혹은 " + NO + "만 입력해야 합니다.";
+    private static final String BETTING_NOT_POSITIVE_EXCEPTION_MESSAGE = "베팅금액은 양의 정수만 입력해야 합니다.";
     private static final String INVALID_BETTING_INPUT_EXCEPTION_MESSAGE = "숫자를 입력해야 합니다.";
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -48,7 +49,7 @@ public class InputView {
 
     private static void validatePositive(final int input) {
         if (input <= 0) {
-            throw new IllegalArgumentException("베팅금액은 양의 정수만 입력해야 합니다.");
+            throw new IllegalArgumentException(BETTING_NOT_POSITIVE_EXCEPTION_MESSAGE);
         }
     }
 
